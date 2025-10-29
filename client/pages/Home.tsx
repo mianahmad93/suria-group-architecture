@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/Layout";
-import { motion, Variants, useScroll, useTransform, useInView } from "framer-motion";
+import { motion, Variants, useScroll, useTransform, useInView, useMotionValue, useMotionTemplate, animate } from "framer-motion";
 import SplitType from "split-type";
 import { gsap } from "gsap";
 import "./CompaniesSection.scss";
 import { ChevronRight, Code, Building, Utensils, Truck, Shirt, } from "lucide-react";
 import styles from './VenturesSection.module.css';
-
+const COLORS_TOP = ["#C2410C", "#EA580C", "#F97316", "#FB923C"];
 const companies = [
   {
     id: 1,
@@ -709,6 +709,12 @@ const VenturesSection: React.FC = () => {
   const ongoing = ventures.filter((v: Venture) => v.status === 'ongoing');
   const completed = ventures.filter((v: Venture) => v.status === 'completed');
 
+  // Image map for completed ventures
+  const completedVentureImages: Record<number, string> = {
+    4: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&h=600&fit=crop",
+    5: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&h=600&fit=crop",
+  };
+
   const textRef = useRef(null);
   const isInView = useInView(textRef, { once: false, margin: "-100px" });
 
@@ -759,77 +765,227 @@ const VenturesSection: React.FC = () => {
         </div>
       </div>
 
-      <div className={styles.Complete_venture}>
-        <h3 className="text-2xl font-bold mb-8">Completed Ventures</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {completed.map((venture) => {
-            const ventureImages: Record<number, string> = {
-              3: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&h=400&fit=crop",
-              4: "https://images.unsplash.com/photo-1509391366360-2e938d440220?w=600&h=400&fit=crop",
-            };
-            return (
-              <div
-                key={venture.id}
-                className="bg-white border border-border rounded-xl overflow-hidden hover-lift transition-all"
-              >
-                <div className="h-40 bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center overflow-hidden relative">
-                  <img
-                    src={ventureImages[venture.id]}
-                    alt={venture.title}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-black opacity-10"></div>
-                </div>
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-3">
-                    <h4 className="text-lg font-semibold text-foreground">
-                      {venture.title}
-                    </h4>
-                    <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold">
-                      Completed
-                    </span>
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-2">
-                    📍 {venture.location}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
+      <section className="mx-auto max-w-7xl px-4 py-12 text-slate-800">
+        <div className="mb-8 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end md:px-8">
+          <h2 className="max-w-lg text-4xl font-bold md:text-5xl">
+            Completed <motion.span className="text-amber-400">Ventures</motion.span>
+          </h2>
         </div>
-      </div>
+
+        <motion.div
+          className="grid grid-cols-12 gap-4 "
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, amount: 0.2 }}
+          variants={{
+            hidden: {},
+            visible: {
+              transition: { staggerChildren: 0.12 }
+            }
+          }}
+        >
+          {completed.map((venture, index) => (
+            <BounceCard
+              key={venture.id}
+              className={index === 0 ? "col-span-12 md:col-span-6 bg-[#c46a05]" : "col-span-12 md:col-span-6 bg-[#c46a05]"}
+            >
+              <div className="relative z-10">
+                <div className="flex flex-wrap items-center justify-start md:justify-between gap-2 md:gap-3 mb-3 md:mb-4">
+                  <h3 className="flex-1 min-w-0 text-xl sm:text-2xl md:text-3xl font-semibold text-white leading-snug">
+                    {venture.title}
+                  </h3>
+                  <span className="px-2.5 py-0.5 md:px-3 md:py-1 bg-white/20 text-white rounded-full text-[10px] sm:text-xs font-semibold whitespace-nowrap shrink-0">
+                    Completed
+                  </span>
+                </div>
+                <p className="text-xs sm:text-sm md:text-base text-white/90 flex items-center gap-1">
+                  <span>📍</span> {venture.location}
+                </p>
+              </div>
+
+              <div className="absolute bottom-0 left-4 right-4 top-24 sm:top-28 md:top-32 translate-y-8 rounded-t-xl md:rounded-t-2xl overflow-hidden transition-transform duration-[250ms] group-hover:translate-y-4 group-hover:rotate-[2deg] shadow-lg">
+                <motion.img
+                  src={completedVentureImages[venture.id]}
+                  alt={venture.title}
+                  className="w-full h-full object-cover"
+                  initial={{ scale: 1.1 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: false, amount: 0.5 }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
+                />
+              </div>
+            </BounceCard>
+          ))}
+        </motion.div>
+
+       
+      </section>
     </section>
   );
 };
 
-const CallToActionSection: React.FC = () => {
+
+const BounceCard = ({ className, children }) => {
   return (
-    <section className="bg-gradient-to-r from-primary to-amber-600 text-white py-16 md:py-24">
-      <div className="section-container text-center space-y-8 fade-in">
-        <h2 className="text-4xl md:text-5xl font-bold">
+    <motion.div
+      variants={{
+        hidden: { opacity: 0, y: 32 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+      }}
+      whileHover={{ scale: 0.95, rotate: "-1deg", y: -4 }}
+      className={`group relative min-h-[260px] md:min-h-[320px] cursor-pointer overflow-hidden rounded-2xl  p-6 md:p-8 ${className}`}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+const CardTitle = ({ children }) => {
+  return (
+    <h3 className="mx-auto text-center text-3xl font-semibold">{children}</h3>
+  );
+};
+
+
+
+
+
+export const CallToActionSection = () => {
+  const color = useMotionValue(COLORS_TOP[0]);
+
+  useEffect(() => {
+    animate(color, COLORS_TOP, {
+      ease: "easeInOut",
+      duration: 10,
+      repeat: Infinity,
+      repeatType: "mirror",
+    });
+  }, []);
+
+  const backgroundImage = useMotionTemplate`radial-gradient(125% 125% at 50% 0%, #020617 50%, ${color})`;
+  const border = useMotionTemplate`1px solid ${color}`;
+  const boxShadow = useMotionTemplate`0px 4px 24px ${color}`;
+
+  return (
+    <motion.section
+      style={{
+        backgroundImage,
+      }}
+      className="relative grid min-h-[600px] md:min-h-[700px] place-content-center overflow-hidden bg-gray-950 px-4 py-16 md:py-24 text-gray-200"
+    >
+      {/* Animated stars background */}
+      <div className="absolute inset-0 z-0">
+        {[...Array(100)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 bg-white rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              opacity: [0.2, 1, 0.2],
+              scale: [0.8, 1.2, 0.8],
+            }}
+            transition={{
+              duration: 2 + Math.random() * 3,
+              repeat: Infinity,
+              delay: Math.random() * 2,
+            }}
+          />
+        ))}
+      </div>
+
+      <div className="relative z-10 flex flex-col items-center max-w-4xl mx-auto">
+        <motion.span 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="mb-4 inline-block rounded-full bg-gray-600/50 px-4 py-2 text-sm md:text-base backdrop-blur-sm"
+        >
+          Join Our Growing Network
+        </motion.span>
+        
+        <motion.h2 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-6 bg-gradient-to-br from-white to-gray-400 bg-clip-text text-transparent leading-tight"
+        >
           Ready to Partner with Suira Group?
-        </h2>
-        <p className="text-lg opacity-90 max-w-2xl mx-auto">
+        </motion.h2>
+        
+        <motion.p 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="text-base md:text-lg lg:text-xl text-center text-gray-300 max-w-2xl mx-auto mb-8 px-4 leading-relaxed"
+        >
           Whether you're interested in joining our team, exploring business
           opportunities, or getting in touch with our leadership, we'd love to
           hear from you.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link
-            to="/contact"
-            className="px-8 py-3 bg-white text-primary rounded-lg font-semibold hover:opacity-90 transition-opacity inline-block"
+        </motion.p>
+        
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="flex flex-col sm:flex-row gap-4 justify-center w-full sm:w-auto px-4"
+        >
+          <motion.button
+            style={{
+              border,
+              boxShadow,
+            }}
+            whileHover={{
+              scale: 1.015,
+            }}
+            whileTap={{
+              scale: 0.985,
+            }}
+            className="group relative flex items-center justify-center gap-2 rounded-full bg-white/90 px-6 md:px-8 py-3 md:py-4 text-gray-900 font-semibold transition-colors hover:bg-white text-sm md:text-base backdrop-blur-sm"
           >
             Get In Touch
-          </Link>
-          <Link
-            to="/career"
-            className="px-8 py-3 border-2 border-white text-white rounded-lg font-semibold hover:bg-white hover:text-primary transition-all inline-block"
+            <svg 
+              className="w-4 h-4 transition-transform group-hover:-rotate-45 group-active:-rotate-12" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </motion.button>
+          
+          <motion.button
+            style={{
+              border,
+              boxShadow,
+            }}
+            whileHover={{
+              scale: 1.015,
+            }}
+            whileTap={{
+              scale: 0.985,
+            }}
+            className="group relative flex items-center justify-center gap-2 rounded-full bg-gray-950/10 px-6 md:px-8 py-3 md:py-4 text-gray-50 font-semibold transition-colors hover:bg-gray-950/50 text-sm md:text-base backdrop-blur-sm"
           >
             View Careers
-          </Link>
-        </div>
+            <svg 
+              className="w-4 h-4 transition-transform group-hover:scale-110" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+          </motion.button>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 

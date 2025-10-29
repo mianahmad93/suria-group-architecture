@@ -131,9 +131,9 @@
     @apply text-3xl md:text-4xl font-bold tracking-tight;
   }
 
-  h3 {
+  /* h3 {
     @apply text-2xl font-bold;
-  }
+  } */
 
   h4 {
     @apply text-xl font-semibold;
@@ -141,6 +141,20 @@
 
   p {
     @apply text-base leading-relaxed;
+  }
+
+  /* Unify small-screen typography across the page */
+  @media (max-width: 640px) {
+    h1, h2 {
+      @apply text-2xl;
+    }
+
+    h3{
+      @apply text-sm;
+    }
+    p {
+      @apply text-sm;
+    }
   }
 }
 

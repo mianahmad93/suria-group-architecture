@@ -6,6 +6,13 @@
     position: sticky;
     top: 0;
 
+    @media (max-width: 768px) {
+        height: auto;
+        position: static;
+        top: auto;
+        padding: 16px 12px;
+    }
+
     .card {
         display: flex;
         flex-direction: column;
@@ -24,6 +31,19 @@
         &:hover {
             transform: translateY(-4px);
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        @media (max-width: 1024px) {
+            width: 90vw;
+        }
+
+        @media (max-width: 768px) {
+            top: 0;
+            width: 100%;
+            height: auto;
+            min-height: 560px;
+            padding: 20px;
+            border-radius: 18px;
         }
 
         h2 {
@@ -59,7 +79,7 @@
 
                 @media (max-width: 768px) {
                     width: 100%;
-                    height: 250px;
+                    height: 320px; /* larger images on mobile */
                 }
 
                 .inner {
