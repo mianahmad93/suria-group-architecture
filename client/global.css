@@ -1,0 +1,220 @@
+/** @import must precede all other statements */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /**
+   * Suira Group Corporate Color Theme
+   * Modern, elegant, professional (blue, white, silver tones)
+   * tailwind.config.ts expects HSL format
+  */
+  :root {
+    /* Corporate Primary Colors - Light Brown Theme */
+    --primary: 25 60% 48%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary Colors */
+    --secondary: 30 40% 85%;
+    --secondary-foreground: 25 60% 48%;
+
+    /* Neutral/Tan */
+    --accent: 25 30% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Backgrounds */
+    --background: 0 0% 100%;
+    --foreground: 25 15% 20%;
+
+    /* UI Elements */
+    --card: 0 0% 100%;
+    --card-foreground: 25 15% 20%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 25 15% 20%;
+
+    --muted: 30 25% 87%;
+    --muted-foreground: 25 10% 48%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 30 25% 90%;
+    --input: 30 20% 94%;
+    --ring: 25 60% 48%;
+
+    --radius: 0.5rem;
+
+    /* Sidebar */
+    --sidebar-background: 25 60% 48%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 0 0% 100%;
+    --sidebar-primary-foreground: 25 60% 48%;
+    --sidebar-accent: 30 40% 85%;
+    --sidebar-accent-foreground: 25 60% 48%;
+    --sidebar-border: 30 35% 80%;
+    --sidebar-ring: 25 60% 48%;
+  }
+
+  .dark {
+    /* Dark mode light brown theme */
+    --primary: 25 60% 55%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 25 30% 28%;
+    --secondary-foreground: 25 60% 55%;
+
+    --accent: 25 35% 62%;
+    --accent-foreground: 0 0% 10%;
+
+    --background: 25 25% 15%;
+    --foreground: 0 0% 95%;
+
+    --card: 25 25% 22%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 25 25% 22%;
+    --popover-foreground: 0 0% 95%;
+
+    --muted: 25 20% 40%;
+    --muted-foreground: 30 20% 72%;
+
+    --destructive: 0 72% 45%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 25 20% 35%;
+    --input: 25 20% 30%;
+    --ring: 25 60% 55%;
+
+    --sidebar-background: 25 25% 15%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 25 60% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 25 25% 35%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 25 20% 32%;
+    --sidebar-ring: 25 60% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+
+  :where(p, span, li, h1, h2, h3, h4, h5, h6, a, button, label, td, th) {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  pre,
+  code {
+    overflow-x: auto;
+    white-space: pre;
+  }
+
+  h1 {
+    @apply text-4xl md:text-5xl font-bold tracking-tight;
+  }
+
+  h2 {
+    @apply text-3xl md:text-4xl font-bold tracking-tight;
+  }
+
+  h3 {
+    @apply text-2xl font-bold;
+  }
+
+  h4 {
+    @apply text-xl font-semibold;
+  }
+
+  p {
+    @apply text-base leading-relaxed;
+  }
+}
+
+@layer components {
+  .gradient-primary {
+    @apply bg-gradient-to-br from-primary via-amber-600 to-primary;
+  }
+
+  .gradient-dark {
+    @apply bg-gradient-to-br from-primary via-amber-700 to-primary;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary to-amber-600 bg-clip-text text-transparent;
+  }
+
+  .btn-primary {
+    @apply px-8 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:opacity-90 transition-opacity;
+  }
+
+  .btn-secondary {
+    @apply px-8 py-3 bg-secondary text-secondary-foreground rounded-lg font-semibold border border-primary hover:bg-primary hover:text-primary-foreground transition-all;
+  }
+
+  .section-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .fade-in {
+    animation: fadeIn 0.6s ease-in-out;
+  }
+
+  .slide-up {
+    animation: slideUp 0.6s ease-out;
+  }
+
+  .hover-lift {
+    @apply transition-all hover:-translate-y-2 hover:shadow-xl;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
+
+
+

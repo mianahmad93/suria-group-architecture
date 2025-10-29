@@ -1,0 +1,109 @@
+.venture {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 1.2rem 0;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color 0.3s ease, transform 0.3s ease, color 0.3s ease;
+  min-height: 150px; /* ✅ Fix: ensures consistent row height */
+  overflow: hidden; 
+}
+
+.venture:hover {
+  background-color: #d97706;
+  transform: translateY(-2px);
+  color: #fff;
+}
+
+.leftTitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--foreground, #111);
+  flex: 1;
+  text-align: left;
+  transition: color 0.3s ease;
+  padding-left: 15px;
+}
+
+.venture:hover .leftTitle {
+  color: #fff;
+}
+
+.imgContainer {
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  width: 14vw;
+  min-width: 200px;
+  border-radius: 12px;
+  aspect-ratio: 16 / 9;
+  /* align-items: center; */
+  /* width: 0; */
+}
+
+.img {
+  width: 100%;
+  /* min-width: 150px; */
+  height: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  will-change: transform, opacity;
+}
+
+.rightBlock {
+  flex: 1;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.4rem;
+  padding-right: 15px;
+}
+
+.rightTitle {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--primary, #d97706);
+  letter-spacing: 0.5px;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.3rem;
+}
+
+.location {
+  font-size: 0.85rem;
+  color: var(--muted-foreground, #666);
+}
+
+.progressWrap {
+  width: 100px;
+  height: 6px;
+  background-color: rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #f59e0b, #d97706);
+  border-radius: 10px;
+  transition: width 0.4s ease, background-color 0.4s ease;
+}
+
+.venture:last-of-type {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+
+.Complete_venture{
+  max-width: 90%;
+  margin: auto;
+}

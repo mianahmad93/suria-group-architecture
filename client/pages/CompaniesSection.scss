@@ -1,0 +1,249 @@
+.cardContainer {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: sticky;
+    top: 0;
+
+    .card {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        top: -25%;
+        height: 500px;
+        width: 1000px;
+        border-radius: 25px;
+        padding: 40px;
+        transform-origin: top;
+        background-color: #b5651d; // Your theme color
+        color: #fff;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+        &:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        h2 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-align: left;
+
+            @media (max-width: 768px) {
+                text-align: center;
+            }
+        }
+
+        .body {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+            height: 100%;
+            margin-top: 20px;
+
+            @media (max-width: 768px) {
+                flex-direction: column;
+                margin-top: 10px;
+            }
+
+            .imageContainer {
+                position: relative;
+                width: 55%;
+                height: 100%;
+                border-radius: 25px;
+                overflow: hidden;
+
+                @media (max-width: 768px) {
+                    width: 100%;
+                    height: 250px;
+                }
+
+                .inner {
+                    width: 100%;
+                    height: 100%;
+                }
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    filter: brightness(0.9);
+                    transition: transform 0.5s ease;
+                }
+
+                &:hover img {
+                    transform: scale(1.05);
+                }
+            }
+
+            .description {
+                width: 45%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                text-align: left;
+
+                @media (max-width: 768px) {
+                    width: 100%;
+                    text-align: center;
+                    margin-top: 20px;
+                }
+
+                .iconContainer {
+                    margin-bottom: 15px;
+                    display: flex;
+                    justify-content: flex-start;
+
+                    @media (max-width: 768px) {
+                        justify-content: center;
+                    }
+
+                    .iconBg {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 60px;
+                        height: 60px;
+                        border-radius: 14px;
+                        background: linear-gradient(to right, #fbbf24, #f59e0b);
+                        color: #b5651d;
+                        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+                    }
+                }
+
+                h2 {
+                    font-size: 28px;
+                    margin-bottom: 10px;
+                    color: #fff;
+                }
+
+                p {
+                    font-size: 16px;
+                    line-height: 1.6;
+                    color: #f8f8f8;
+                    margin-bottom: 20px;
+                }
+
+                span {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    font-weight: 600;
+
+                    @media (max-width: 768px) {
+                        justify-content: center;
+                    }
+
+                    a {
+                        font-size: 14px;
+                        text-decoration: underline;
+                        color: #fff;
+                        transition: color 0.3s ease;
+
+                        &:hover {
+                            color: #ffd580;
+                        }
+                    }
+
+                    svg {
+                        color: #ffd580;
+                        transition: transform 0.3s ease;
+                    }
+
+                    &:hover svg {
+                        transform: translateX(4px);
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* Optional subtle animation for scroll-up heading */
+.slide-up {
+    animation: slideUp 0.7s ease forwards;
+    opacity: 0;
+}
+
+@keyframes slideUp {
+    0% {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+
+
+/* === Animated Text Section === */
+.animated-text-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: rgb(211, 211, 211);
+    margin-bottom: 3rem;
+    overflow: hidden;
+}
+
+.animated-text-body {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    overflow: hidden;
+}
+
+.animated-text-body p {
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    gap: 1vw;
+    color: #b5651d;
+    text-transform: uppercase;
+    font-size: 35px;
+}
+
+.animated-text-body span {
+    display: inline-block;
+    opacity: 0;
+}
+
+.animated-text-body.paragraph p {
+    padding: 3px;
+    font-weight: 400;
+    color: black;
+    text-transform: none;
+    max-width: 700px;
+    margin-top: 1rem;
+    font-size: 20px !important;
+}
+
+.animated-divider {
+    opacity: 0;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: all 0.6s ease-out;
+}
+
+.animated-text-container .animated-divider {
+    opacity: 1;
+    transform: scaleX(1);
+}
+
+
+@media only screen and (max-width:768px) {
+    .animated-text-body p {
+        font-size: 18px !important;
+    }
+
+    .animated-text-body.paragraph p {
+        font-size: 16px !important;
+    }
+}
