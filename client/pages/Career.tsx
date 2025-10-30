@@ -76,9 +76,7 @@ const Career: React.FC = () => {
   });
   const [submitted, setSubmitted] = useState(false);
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  
 
 
   AOS.init();
@@ -320,6 +318,12 @@ const Career: React.FC = () => {
   }, []);
 
 
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+
   return (
     <Layout>
       {/* Hero Section */}
@@ -502,67 +506,86 @@ const Career: React.FC = () => {
 
         {/* Job Listings */}
         <div className="grid grid-cols-1 gap-6">
-          {careers.map((job, index) => {
-            const jobImages: Record<number, string> = {
-              1: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&h=300&fit=crop",
-              2: "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=400&h=300&fit=crop",
-              3: "https://images.unsplash.com/photo-1453460892917-8b9b7681eaea?w=400&h=300&fit=crop",
-              4: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop",
-              5: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop",
-              6: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=300&fit=crop",
-            };
-            return (
-              <div
-                key={job.id}
-                className="overflow-hidden bg-white border border-border rounded-xl hover-lift transition-all slide-up"
-                style={{
-                  animationDelay: `${index * 50}ms`,
-                }}
-              >
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
-                  <div className="md:col-span-1 h-48 md:h-full overflow-hidden">
-                    <img
-                      src={jobImages[job.id]}
-                      alt={job.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform"
-                    />
-                  </div>
-                  <div className="md:col-span-2 p-6 md:p-8 flex flex-col justify-between">
-                    <div>
-                      <h3 className="text-2xl font-bold text-foreground mb-2">
-                        {job.title}
-                      </h3>
-                      <p className="text-primary font-semibold mb-3">
-                        {job.company}
-                      </p>
+  {careers.map((job, index) => {
+    const jobImages: Record<number, string> = {
+      1: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&h=300&fit=crop",
+      2: "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=400&h=300&fit=crop",
+      3: "https://images.unsplash.com/photo-1453460892917-8b9b7681eaea?w=400&h=300&fit=crop",
+      4: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop",
+      5: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop",
+      6: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=300&fit=crop",
+    };
+    
+    // Even index = left se aaye, Odd index = right se aaye
+    const isEven = index % 2 === 0;
+    
+    return (
+      <motion.div
+        key={job.id}
+        initial={{ 
+          opacity: 0, 
+          x: isEven ? -100 : 100 
+        }}
+        whileInView={{ 
+          opacity: 1, 
+          x: 0 
+        }}
+        viewport={{ once: false, amount: 0.2 }}
+        transition={{ 
+          duration: 0.6, 
+          ease: "easeOut",
+          delay: index * 0.1 
+        }}
+        className="overflow-hidden bg-white border border-border rounded-xl hover-lift transition-all"
+      >
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
+          <div className="md:col-span-1 h-48 md:h-full overflow-hidden">
+            <motion.img
+              src={jobImages[job.id]}
+              alt={job.title}
+              className="w-full h-full object-cover"
+              whileHover={{ scale: 1.1 }}
+              transition={{ duration: 0.3 }}
+            />
+          </div>
+          <div className="md:col-span-2 p-6 md:p-8 flex flex-col justify-between">
+            <div>
+              <h3 className="text-2xl font-bold text-foreground mb-2">
+                {job.title}
+              </h3>
+              <p className="text-primary font-semibold mb-3">
+                {job.company}
+              </p>
 
-                      <div className="flex flex-wrap gap-6 mb-4 text-muted-foreground">
-                        <div className="flex items-center gap-2">
-                          <MapPin size={18} className="text-primary" />
-                          {job.location}
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Briefcase size={18} className="text-primary" />
-                          {job.type}
-                        </div>
-                      </div>
-
-                      <p className="text-muted-foreground leading-relaxed mb-4">
-                        {job.description}
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => handleApplyClick(job)}
-                      className="px-6 py-2 bg-primary text-white rounded-lg font-semibold hover:opacity-90 transition-opacity whitespace-nowrap w-fit"
-                    >
-                      Apply Now
-                    </button>
-                  </div>
+              <div className="flex flex-wrap gap-6 mb-4 text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <MapPin size={18} className="text-primary" />
+                  {job.location}
+                </div>
+                <div className="flex items-center gap-2">
+                  <Briefcase size={18} className="text-primary" />
+                  {job.type}
                 </div>
               </div>
-            );
-          })}
+
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                {job.description}
+              </p>
+            </div>
+            <motion.button
+              onClick={() => handleApplyClick(job)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-6 py-2 bg-primary text-white rounded-lg font-semibold hover:opacity-90 transition-opacity whitespace-nowrap w-fit"
+            >
+              Apply Now
+            </motion.button>
+          </div>
         </div>
+      </motion.div>
+    );
+  })}
+</div>
 
         {/* Benefits Section */}
         <div className="mt-16 bg-secondary rounded-xl p-8 md:p-12" data-aos="fade-down"

@@ -67,9 +67,7 @@ const About: React.FC = () => {
   }, [hasAnimated]);
 
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+ 
 
   AOS.init();
 
@@ -160,6 +158,11 @@ const About: React.FC = () => {
     observer.observe(paragraphRef.current);
 
     return () => observer.disconnect();
+  }, []);
+
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
   }, []);
 
   return (
