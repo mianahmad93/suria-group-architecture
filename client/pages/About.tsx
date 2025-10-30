@@ -1,10 +1,165 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Layout } from "@/components/Layout";
 import { CheckCircle } from "lucide-react";
+import { motion, Variants } from "framer-motion";
+import gsap from "gsap";
+import SplitType from "split-type";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 const About: React.FC = () => {
+  const [counts, setCounts] = useState([0, 0, 0, 0]);
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const sectionRef = useRef<HTMLDivElement>(null);
+
+  const stats = [
+    { number: 5, label: "Companies", suffix: "+" },
+    { number: 15, label: "Years Experience", suffix: "+" },
+    { number: 1000, label: "Employees", suffix: "+" },
+    { number: 50, label: "Active Projects", suffix: "+" },
+  ];
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !hasAnimated) {
+            setHasAnimated(true);
+            
+            stats.forEach((stat, index) => {
+              let start = 0;
+              const end = stat.number;
+              const duration = 2000;
+              const increment = end / (duration / 16);
+
+              const timer = setInterval(() => {
+                start += increment;
+                if (start >= end) {
+                  setCounts((prev) => {
+                    const newCounts = [...prev];
+                    newCounts[index] = end;
+                    return newCounts;
+                  });
+                  clearInterval(timer);
+                } else {
+                  setCounts((prev) => {
+                    const newCounts = [...prev];
+                    newCounts[index] = Math.floor(start);
+                    return newCounts;
+                  });
+                }
+              }, 16);
+            });
+          } else if (!entry.isIntersecting) {
+            setHasAnimated(false);
+            setCounts([0, 0, 0, 0]);
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [hasAnimated]);
+
+
   useEffect(() => {
     window.scrollTo(0, 0);
+  }, []);
+
+  AOS.init();
+
+  const headingRef = useRef<HTMLHeadingElement | null>(null);
+  const splitInstance = useRef<any>(null);
+  const paragraphRef = useRef<HTMLParagraphElement | null>(null);
+
+  const containerVariants: Variants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut",
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.7, ease: "easeOut" },
+    },
+  };
+
+  useEffect(() => {
+    if (!headingRef.current) return;
+
+    splitInstance.current = new SplitType(headingRef.current, { types: "chars" });
+    const chars = splitInstance.current.chars;
+
+    gsap.set(chars, { opacity: 0, y: 30, filter: "blur(6px)" });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            gsap.to(chars, {
+              opacity: 1,
+              y: 0,
+              filter: "blur(0px)",
+              stagger: 0.03,
+              duration: 0.8,
+              ease: "power2.out",
+            });
+          } else {
+            gsap.set(chars, { opacity: 0, y: 30, filter: "blur(6px)" });
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(headingRef.current);
+
+    return () => {
+      observer.disconnect();
+      splitInstance.current?.revert();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!paragraphRef.current) return;
+
+    gsap.set(paragraphRef.current, { opacity: 0, y: 40 });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            gsap.to(paragraphRef.current, {
+              opacity: 1,
+              y: 0,
+              duration: 1,
+              ease: "power2.out",
+            });
+          } else {
+            gsap.set(paragraphRef.current, { opacity: 0, y: 40 });
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(paragraphRef.current);
+
+    return () => observer.disconnect();
   }, []);
 
   return (
@@ -18,21 +173,43 @@ const About: React.FC = () => {
             className="w-full h-full object-cover"
           />
         </div>
+
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full mix-blend-multiply filter blur-3xl"></div>
+          <div className="absolute top-0 right-0 w-96 h-96 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl"></div>
+        </div>
+
         <div className="relative section-container text-center">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6">
-            About Suira Group
-          </h1>
-          <p className="text-lg opacity-90 max-w-2xl mx-auto">
-            Leading the way in innovation, integrity, and sustainable growth
-            across multiple industries
-          </p>
+          <motion.div
+            className="space-y-6 max-w-4xl mx-auto"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: false, amount: 0.3 }}
+          >
+            <motion.h1
+              ref={headingRef}
+              variants={itemVariants}
+              className="text-5xl md:text-6xl font-bold mb-6"
+            >
+              About Suira Group
+            </motion.h1>
+            <motion.p
+              ref={paragraphRef}
+              variants={itemVariants}
+              className="text-lg opacity-90 max-w-2xl mx-auto"
+            >
+              Leading the way in innovation, integrity, and sustainable growth
+              across multiple industries
+            </motion.p>
+          </motion.div>
         </div>
       </section>
 
       {/* Mission, Vision, Values */}
       <section className="section-container py-16 md:py-24">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          <div className="relative overflow-hidden bg-white border border-border rounded-xl hover-lift transition-all group">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16 overflow-hidden">
+          <div data-aos="fade-right" className="relative overflow-hidden bg-white border border-border rounded-xl hover-lift transition-all group">
             <div className="h-40 overflow-hidden">
               <img
                 src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=300&fit=crop"
@@ -55,7 +232,7 @@ const About: React.FC = () => {
             </div>
           </div>
 
-          <div className="relative overflow-hidden bg-white border border-border rounded-xl hover-lift transition-all group">
+          <div data-aos="fade-up" className="relative overflow-hidden bg-white border border-border rounded-xl hover-lift transition-all group">
             <div className="h-40 overflow-hidden">
               <img
                 src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=300&fit=crop"
@@ -78,7 +255,7 @@ const About: React.FC = () => {
             </div>
           </div>
 
-          <div className="relative overflow-hidden bg-white border border-border rounded-xl hover-lift transition-all group">
+          <div data-aos="fade-left"className="relative overflow-hidden bg-white border border-border rounded-xl hover-lift transition-all group">
             <div className="h-40 overflow-hidden">
               <img
                 src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=300&fit=crop"
@@ -103,7 +280,10 @@ const About: React.FC = () => {
         </div>
 
         {/* Core Values List */}
-        <div className="bg-secondary rounded-xl p-8 md:p-12">
+        <div data-aos="fade-right"
+          data-aos-offset="300"
+          data-aos-easing="ease-in-sine"
+          className="bg-secondary rounded-xl p-8 md:p-12">
           <h3 className="text-3xl font-bold text-foreground mb-8">
             Core Values
           </h3>
@@ -126,8 +306,8 @@ const About: React.FC = () => {
       </section>
 
       {/* Timeline Section */}
-      <section className="section-container py-16 md:py-24">
-        <h2 className="text-4xl font-bold text-foreground mb-4 text-center">
+      <section className="section-container py-16 md:py-24 overflow-hidden">
+        <h2 data-aos="zoom-in" className="text-4xl font-bold text-foreground mb-4 text-center">
           Our Journey
         </h2>
         <div className="w-20 h-1 bg-gradient-to-r from-primary to-amber-600 rounded-full mx-auto mb-16"></div>
@@ -165,7 +345,8 @@ const About: React.FC = () => {
               desc: "Recognized as a leading diversified business group with presence across 5 major sectors.",
             },
           ].map((milestone, index) => (
-            <div key={index} className="flex gap-6">
+            <div key={index} className="flex gap-6" data-aos="fade-up"
+            data-aos-duration="3000">
               <div className="flex flex-col items-center">
                 <div className="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">
                   {index + 1}
@@ -187,25 +368,32 @@ const About: React.FC = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="bg-primary text-white py-16 md:py-24">
-        <div className="section-container">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
-            {[
-              { number: "5+", label: "Companies" },
-              { number: "15+", label: "Years Experience" },
-              { number: "1000+", label: "Employees" },
-              { number: "50+", label: "Active Projects" },
-            ].map((stat, index) => (
-              <div key={index}>
-                <div className="text-4xl md:text-5xl font-bold mb-2">
-                  {stat.number}
+      <section ref={sectionRef} className="py-16 md:py-24 bg-white">
+      <div className="section-container">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+          {stats.map((stat, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              viewport={{ once: false, amount: 0.3 }}
+              className="flex justify-center items-center"
+            >
+              <div className="relative flex flex-col items-center justify-center w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 lg:w-48 lg:h-48 rounded-full bg-gradient-to-br from-primary via-amber-600 to-primary shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
+                <div className="text-3xl sm:text-4xl md:text-4xl lg:text-5xl font-bold text-white mb-1 md:mb-2">
+                  {counts[index]}
+                  {stat.suffix}
                 </div>
-                <div className="text-lg opacity-90">{stat.label}</div>
+                <div className="text-xs sm:text-sm md:text-base text-white opacity-90 text-center px-2">
+                  {stat.label}
+                </div>
               </div>
-            ))}
-          </div>
+            </motion.div>
+          ))}
         </div>
-      </section>
+      </div>
+    </section>
     </Layout>
   );
 };

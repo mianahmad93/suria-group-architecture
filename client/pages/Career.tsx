@@ -1,6 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Layout } from "@/components/Layout";
 import { MapPin, Briefcase, Upload } from "lucide-react";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import { motion, Variants } from "framer-motion";
+import gsap from "gsap";
+import SplitType from "split-type";
 
 const careers = [
   {
@@ -75,6 +80,9 @@ const Career: React.FC = () => {
     window.scrollTo(0, 0);
   }, []);
 
+
+  AOS.init();
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -122,6 +130,196 @@ const Career: React.FC = () => {
     }, 2000);
   };
 
+
+  const headingRef = useRef<HTMLHeadingElement | null>(null);
+  const splitInstance = useRef<any>(null);
+  const paragraphRef = useRef<HTMLParagraphElement | null>(null);
+
+  const containerVariants: Variants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut",
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.7, ease: "easeOut" },
+    },
+  };
+
+  useEffect(() => {
+    if (!headingRef.current) return;
+
+    splitInstance.current = new SplitType(headingRef.current, { types: "chars" });
+    const chars = splitInstance.current.chars;
+
+    gsap.set(chars, { opacity: 0, y: 30, filter: "blur(6px)" });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            gsap.to(chars, {
+              opacity: 1,
+              y: 0,
+              filter: "blur(0px)",
+              stagger: 0.03,
+              duration: 0.8,
+              ease: "power2.out",
+            });
+          } else {
+            gsap.set(chars, { opacity: 0, y: 30, filter: "blur(6px)" });
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(headingRef.current);
+
+    return () => {
+      observer.disconnect();
+      splitInstance.current?.revert();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!paragraphRef.current) return;
+
+    gsap.set(paragraphRef.current, { opacity: 0, y: 40 });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            gsap.to(paragraphRef.current, {
+              opacity: 1,
+              y: 0,
+              duration: 1,
+              ease: "power2.out",
+            });
+          } else {
+            gsap.set(paragraphRef.current, { opacity: 0, y: 40 });
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(paragraphRef.current);
+
+    return () => observer.disconnect();
+  }, []);
+
+
+
+
+
+  const headingRef2 = useRef<HTMLHeadingElement | null>(null);
+  const splitInstance2 = useRef<any>(null);
+  const paragraphRef2 = useRef<HTMLParagraphElement | null>(null);
+  const lineRef2 = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!headingRef2.current) return;
+
+    splitInstance2.current = new SplitType(headingRef2.current, { types: "chars" });
+    const chars = splitInstance2.current.chars;
+
+    gsap.set(chars, { opacity: 0, y: 30, filter: "blur(6px)" });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            gsap.to(chars, {
+              opacity: 1,
+              y: 0,
+              filter: "blur(0px)",
+              stagger: 0.03,
+              duration: 0.8,
+              ease: "power2.out",
+            });
+          } else {
+            gsap.set(chars, { opacity: 0, y: 30, filter: "blur(6px)" });
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(headingRef2.current);
+
+    return () => {
+      observer.disconnect();
+      splitInstance2.current?.revert();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!paragraphRef2.current) return;
+
+    gsap.set(paragraphRef2.current, { opacity: 0, y: 40 });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            gsap.to(paragraphRef2.current, {
+              opacity: 1,
+              y: 0,
+              duration: 1,
+              ease: "power2.out",
+            });
+          } else {
+            gsap.set(paragraphRef2.current, { opacity: 0, y: 40 });
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(paragraphRef2.current);
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!lineRef2.current) return;
+
+    gsap.set(lineRef2.current, { scaleX: 0 });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            gsap.to(lineRef2.current, {
+              scaleX: 1,
+              duration: 0.8,
+              ease: "power2.out",
+              delay: 0.3,
+            });
+          } else {
+            gsap.set(lineRef2.current, { scaleX: 0 });
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(lineRef2.current);
+
+    return () => observer.disconnect();
+  }, []);
+
+
   return (
     <Layout>
       {/* Hero Section */}
@@ -133,11 +331,35 @@ const Career: React.FC = () => {
             className="w-full h-full object-cover"
           />
         </div>
+
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full mix-blend-multiply filter blur-3xl"></div>
+          <div className="absolute top-0 right-0 w-96 h-96 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl"></div>
+        </div>
+
         <div className="relative section-container text-center">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6">Join Our Team</h1>
-          <p className="text-lg opacity-90 max-w-2xl mx-auto">
-            Explore exciting career opportunities across Suira Group companies
-          </p>
+          <motion.div
+            className="space-y-6 max-w-4xl mx-auto"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: false, amount: 0.3 }}
+          >
+            <motion.h1
+              ref={headingRef}
+              variants={itemVariants}
+              className="text-5xl md:text-6xl font-bold mb-6"
+            >
+              Join Our Team
+            </motion.h1>
+            <motion.p
+              ref={paragraphRef}
+              variants={itemVariants}
+              className="text-lg opacity-90 max-w-2xl mx-auto"
+            >
+              Explore exciting career opportunities across Suira Group companies
+            </motion.p>
+          </motion.div>
         </div>
       </section>
 
@@ -258,12 +480,22 @@ const Career: React.FC = () => {
         )}
 
         {/* Heading */}
-        <div className="text-center mb-12 slide-up">
-          <h2 className="text-4xl font-bold text-foreground mb-4">
+        <div className="text-center mb-12">
+          <h2
+            ref={headingRef2}
+            className="text-4xl font-bold text-foreground mb-4"
+          >
             Current Opportunities
           </h2>
-          <div className="w-20 h-1 bg-gradient-to-r from-primary to-blue-600 rounded-full mx-auto mb-6"></div>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <div
+            ref={lineRef2}
+            className="w-20 h-1 bg-gradient-to-r from-primary to-blue-600 rounded-full mx-auto mb-6"
+            style={{ transformOrigin: "center" }}
+          ></div>
+          <p
+            ref={paragraphRef2}
+            className="text-lg text-muted-foreground max-w-2xl mx-auto"
+          >
             Discover positions across all Suira Group companies
           </p>
         </div>
@@ -333,7 +565,9 @@ const Career: React.FC = () => {
         </div>
 
         {/* Benefits Section */}
-        <div className="mt-16 bg-secondary rounded-xl p-8 md:p-12">
+        <div className="mt-16 bg-secondary rounded-xl p-8 md:p-12" data-aos="fade-down"
+          data-aos-easing="linear"
+          data-aos-duration="1500">
           <h3 className="text-3xl font-bold text-foreground mb-8 text-center">
             Why Join Suira Group?
           </h3>

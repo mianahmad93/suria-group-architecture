@@ -319,11 +319,11 @@ const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="bg-primary text-primary-foreground">
+    <footer className="bg-primary text-primary-foreground overflow-hidden">
       <div className="section-container py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           {/* Brand */}
-          <div>
+          <div data-aos="zoom-in">
             <h3 className="text-xl font-bold mb-4">Suira Group</h3>
             <p className="text-sm opacity-90">
               Building the Future with Innovation and Trust
@@ -331,7 +331,7 @@ const Footer: React.FC = () => {
           </div>
 
           {/* Quick Links */}
-          <div>
+          <div data-aos="zoom-in">
             <h4 className="font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-2 text-sm">
               <li>
@@ -370,7 +370,7 @@ const Footer: React.FC = () => {
           </div>
 
           {/* Contact Info */}
-          <div>
+          <div data-aos="zoom-in">
             <h4 className="font-semibold mb-4">Contact</h4>
             <ul className="space-y-2 text-sm opacity-90">
               <li>Email: info@suiragroup.com</li>
@@ -380,7 +380,7 @@ const Footer: React.FC = () => {
           </div>
 
           {/* Social Links */}
-          <div>
+          <div data-aos="zoom-in">
             <h4 className="font-semibold mb-4">Follow Us</h4>
             <ul className="space-y-2 text-sm">
               <li>
@@ -430,7 +430,7 @@ const Footer: React.FC = () => {
         {/* Divider */}
         <div className="border-t border-primary-foreground border-opacity-20 pt-8">
           <div className="flex flex-col md:flex-row items-center justify-between">
-            <p className="text-sm opacity-90">
+            <p className="text-sm opacity-90" >
               © 2025 Suira Group. All rights reserved.
             </p>
             {showScrollTop && (
@@ -456,7 +456,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
   const location = useLocation();
   const hideFooter = location.pathname.startsWith("/companies/");
 
- 
+
 
   return (
     <div className="flex flex-col min-h-screen">
