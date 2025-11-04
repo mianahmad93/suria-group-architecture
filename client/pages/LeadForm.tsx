@@ -1,6 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Layout } from "@/components/Layout";
 import { Send, AlertCircle } from "lucide-react";
+import { motion, Variants } from 'framer-motion';
+import gsap from 'gsap';
+import SplitType from 'split-type';
 
 const LeadForm: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -47,20 +50,129 @@ const LeadForm: React.FC = () => {
     }, 3000);
   };
 
+
+
+
+
+    const headingRef = useRef<HTMLHeadingElement | null>(null);
+  const splitInstance = useRef<any>(null);
+  const paragraphRef = useRef<HTMLParagraphElement | null>(null);
+
+  const containerVariants: Variants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut",
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.7, ease: "easeOut" },
+    },
+  };
+
+  useEffect(() => {
+    if (!headingRef.current) return;
+
+    splitInstance.current = new SplitType(headingRef.current, { types: "chars" });
+    const chars = splitInstance.current.chars;
+
+    gsap.set(chars, { opacity: 0, y: 30, filter: "blur(6px)" });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            gsap.to(chars, {
+              opacity: 1,
+              y: 0,
+              filter: "blur(0px)",
+              stagger: 0.03,
+              duration: 0.8,
+              ease: "power2.out",
+            });
+          } else {
+            gsap.set(chars, { opacity: 0, y: 30, filter: "blur(6px)" });
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(headingRef.current);
+
+    return () => {
+      observer.disconnect();
+      splitInstance.current?.revert();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!paragraphRef.current) return;
+
+    gsap.set(paragraphRef.current, { opacity: 0, y: 40 });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            gsap.to(paragraphRef.current, {
+              opacity: 1,
+              y: 0,
+              duration: 1,
+              ease: "power2.out",
+            });
+          } else {
+            gsap.set(paragraphRef.current, { opacity: 0, y: 40 });
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(paragraphRef.current);
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <Layout>
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-primary via-amber-600 to-primary text-white py-16 md:py-24">
-        <div className="section-container text-center">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6">
+      <div className="section-container text-center">
+        <motion.div
+          className="space-y-6 max-w-4xl mx-auto"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, amount: 0.3 }}
+        >
+          <motion.h1
+            ref={headingRef}
+            variants={itemVariants}
+            className="text-5xl md:text-6xl font-bold mb-6"
+          >
             Business Inquiry
-          </h1>
-          <p className="text-lg opacity-90 max-w-2xl mx-auto">
+          </motion.h1>
+          <motion.p
+            ref={paragraphRef}
+            variants={itemVariants}
+            className="text-lg opacity-90 max-w-2xl mx-auto"
+          >
             Connect with our team to explore partnership opportunities and
             business solutions tailored to your needs
-          </p>
-        </div>
-      </section>
+          </motion.p>
+        </motion.div>
+      </div>
+    </section>
 
       <section className="section-container py-16 md:py-24">
         <div className="max-w-3xl mx-auto">

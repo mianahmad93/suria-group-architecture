@@ -1,6 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState ,useRef} from "react";
 import { Layout } from "@/components/Layout";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
+import { motion, Variants } from "framer-motion";
+import gsap from "gsap";
+import SplitType from "split-type";
 
 const Contact: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -34,25 +37,137 @@ const Contact: React.FC = () => {
     }, 3000);
   };
 
+
+
+
+   const headingRef = useRef<HTMLHeadingElement | null>(null);
+  const paragraphRef = useRef<HTMLParagraphElement | null>(null);
+  const splitInstance = useRef<any>(null);
+
+  const containerVariants: Variants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut",
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.7, ease: "easeOut" },
+    },
+  };
+
+  // Animate heading (Split text into chars)
+  useEffect(() => {
+    if (!headingRef.current) return;
+
+    splitInstance.current = new SplitType(headingRef.current, { types: "chars" });
+    const chars = splitInstance.current.chars;
+
+    gsap.set(chars, { opacity: 0, y: 30, filter: "blur(6px)" });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            gsap.to(chars, {
+              opacity: 1,
+              y: 0,
+              filter: "blur(0px)",
+              stagger: 0.03,
+              duration: 0.8,
+              ease: "power2.out",
+            });
+          } else {
+            gsap.set(chars, { opacity: 0, y: 30, filter: "blur(6px)" });
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(headingRef.current);
+
+    return () => {
+      observer.disconnect();
+      splitInstance.current?.revert();
+    };
+  }, []);
+
+  // Animate paragraph
+  useEffect(() => {
+    if (!paragraphRef.current) return;
+
+    gsap.set(paragraphRef.current, { opacity: 0, y: 40 });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            gsap.to(paragraphRef.current, {
+              opacity: 1,
+              y: 0,
+              duration: 1,
+              ease: "power2.out",
+            });
+          } else {
+            gsap.set(paragraphRef.current, { opacity: 0, y: 40 });
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(paragraphRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <Layout>
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-primary via-amber-600 to-primary text-white py-16 md:py-24 overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          <img
-            src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=1200&h=800&fit=crop"
-            alt="Background"
-            className="w-full h-full object-cover"
-          />
-        </div>
-        <div className="relative section-container text-center">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6">Get In Touch</h1>
-          <p className="text-lg opacity-90 max-w-2xl mx-auto">
+      <div className="absolute inset-0 opacity-20">
+        <img
+          src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=1200&h=800&fit=crop"
+          alt="Background"
+          className="w-full h-full object-cover"
+        />
+      </div>
+
+      <div className="relative section-container text-center">
+        <motion.div
+          className="space-y-6 max-w-4xl mx-auto"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, amount: 0.3 }}
+        >
+          <motion.h1
+            ref={headingRef}
+            variants={itemVariants}
+            className="text-5xl md:text-6xl font-bold mb-6"
+          >
+            Get In Touch
+          </motion.h1>
+          <motion.p
+            ref={paragraphRef}
+            variants={itemVariants}
+            className="text-lg opacity-90 max-w-2xl mx-auto"
+          >
             Have a question or ready to discuss partnership opportunities? We'd
             love to hear from you.
-          </p>
-        </div>
-      </section>
+          </motion.p>
+        </motion.div>
+      </div>
+    </section>
 
       {/* Main Content */}
       <section className="section-container py-16 md:py-24">
