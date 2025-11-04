@@ -17,9 +17,6 @@ import {
 } from "lucide-react";
 
 const SuiraTextiles: React.FC = () => {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
 
 
@@ -140,6 +137,11 @@ const SuiraTextiles: React.FC = () => {
     observer.observe(buttonRef.current);
 
     return () => observer.disconnect();
+  }, []);
+
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
   }, []);
 
 

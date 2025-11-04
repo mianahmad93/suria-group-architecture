@@ -17,9 +17,7 @@ import {
 } from "lucide-react";
 
 const SuiraFoods: React.FC = () => {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  
 
 
 
@@ -140,6 +138,10 @@ const SuiraFoods: React.FC = () => {
     observer.observe(buttonRef.current);
 
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
   }, []);
 
   return (

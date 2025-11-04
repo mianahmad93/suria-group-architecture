@@ -14,9 +14,7 @@ const Contact: React.FC = () => {
   });
   const [submitted, setSubmitted] = useState(false);
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -128,6 +126,11 @@ const Contact: React.FC = () => {
 
     observer.observe(paragraphRef.current);
     return () => observer.disconnect();
+  }, []);
+
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
   }, []);
 
   return (

@@ -4,7 +4,7 @@ import { Calendar, User, ArrowRight } from "lucide-react";
 import { motion, Variants } from 'framer-motion';
 import gsap from 'gsap';
 import SplitType from 'split-type';
-
+import AOS from 'aos';
 const newsArticles = [
   {
     id: 1,
@@ -69,7 +69,7 @@ const newsArticles = [
 ];
 
 const News: React.FC = () => {
- 
+
 
   const featuredArticles = newsArticles.filter((article) => article.featured);
   const regularArticles = newsArticles.filter((article) => !article.featured);
@@ -188,9 +188,23 @@ const News: React.FC = () => {
     return () => observer.disconnect();
   }, []);
 
- useEffect(() => {
+
+
+  useEffect(() => {
+    AOS.init({
+      duration: 800,
+      easing: 'ease-out',
+      once: false,   // ✅ allows it to re-run on scroll up/down
+      mirror: true,  // ✅ runs animation again when scrolling up
+    });
+     window.addEventListener('load', AOS.refresh);
+  }, []);
+
+  useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+
 
 
   return (
@@ -245,6 +259,7 @@ const News: React.FC = () => {
               };
               return (
                 <div
+                  data-aos="zoom-in" 
                   key={article.id}
                   className="bg-white border border-border rounded-xl overflow-hidden hover-lift transition-all cursor-pointer group"
                 >
@@ -299,6 +314,7 @@ const News: React.FC = () => {
           <div className="space-y-4">
             {regularArticles.map((article, index) => (
               <div
+                data-aos="fade-right"
                 key={article.id}
                 className="p-6 bg-white border border-border rounded-xl hover-lift transition-all cursor-pointer group slide-up"
                 style={{
@@ -338,7 +354,8 @@ const News: React.FC = () => {
         </div>
 
         {/* Newsletter Signup */}
-        <div className="mt-16 bg-gradient-to-r from-primary to-blue-600 text-white rounded-xl p-8 md:p-12 text-center">
+        <div data-aos="zoom-in"
+             className="mt-16 bg-gradient-to-r from-primary to-blue-600 text-white rounded-xl p-8 md:p-12 text-center">
           <h3 className="text-3xl font-bold mb-3">Stay Updated</h3>
           <p className="text-lg opacity-90 mb-6 max-w-xl mx-auto">
             Subscribe to our newsletter to receive the latest news and

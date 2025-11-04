@@ -17,9 +17,7 @@ import {
 } from "lucide-react";
 
 const SuiraTechnologies: React.FC = () => {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  
 
 
 
@@ -142,6 +140,10 @@ const SuiraTechnologies: React.FC = () => {
     observer.observe(buttonRef.current);
 
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
   }, []);
 
   return (

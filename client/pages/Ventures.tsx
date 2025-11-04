@@ -111,9 +111,7 @@ const VenturesContent: React.FC<{ view?: VenturesView }> = ({ view }) => {
     },
   };
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+
 
   useEffect(() => {
     if (!headingRef.current) return;
@@ -176,6 +174,11 @@ const VenturesContent: React.FC<{ view?: VenturesView }> = ({ view }) => {
     observer.observe(paragraphRef.current);
 
     return () => observer.disconnect();
+  }, []);
+
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
   }, []);
 
   return (
@@ -383,6 +386,9 @@ const VenturesContent: React.FC<{ view?: VenturesView }> = ({ view }) => {
 };
 
 const Ventures: React.FC = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const { type } = useParams<{ type: "completed" | "ongoing" }>();
 
   if (type === "completed" || type === "ongoing") {
