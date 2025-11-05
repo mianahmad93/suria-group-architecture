@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Layout } from "@/components/Layout";
 import { Calendar, User, ArrowRight } from "lucide-react";
-import { motion, Variants } from 'framer-motion';
+import { motion, Variants,useScroll,useTransform } from 'framer-motion';
 import gsap from 'gsap';
 import SplitType from 'split-type';
 import AOS from 'aos';
@@ -197,8 +197,20 @@ const News: React.FC = () => {
       once: false,   // ✅ allows it to re-run on scroll up/down
       mirror: true,  // ✅ runs animation again when scrolling up
     });
-     window.addEventListener('load', AOS.refresh);
+    window.addEventListener('load', AOS.refresh);
   }, []);
+
+
+
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start end', 'end start'],
+  });
+
+  // Create a smooth fade + upward movement based on scroll position
+  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
+  const translateY = useTransform(scrollYProgress, [0, 1], [100, -100]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -259,7 +271,7 @@ const News: React.FC = () => {
               };
               return (
                 <div
-                  data-aos="zoom-in" 
+                  data-aos="zoom-in"
                   key={article.id}
                   className="bg-white border border-border rounded-xl overflow-hidden hover-lift transition-all cursor-pointer group"
                 >
@@ -307,26 +319,37 @@ const News: React.FC = () => {
         </div>
 
         {/* All Articles */}
-        <div>
+        <motion.div
+          ref={containerRef}
+          style={{ opacity, y: translateY }}
+          transition={{ type: 'spring', stiffness: 80, damping: 20 }}
+          className="py-20"
+        >
           <h2 className="text-3xl font-bold text-foreground mb-8">
             All Articles
           </h2>
-          <div className="space-y-4">
+
+          <div className="space-y-3 ">
             {regularArticles.map((article, index) => (
-              <div
-                data-aos="fade-right"
+              <motion.div
                 key={article.id}
-                className="p-6 bg-white border border-border rounded-xl hover-lift transition-all cursor-pointer group slide-up"
-                style={{
-                  animationDelay: `${index * 50}ms`,
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, amount: 0.3 }} // ✅ triggers on scroll up/down both
+                transition={{
+                  duration: 0.6,
+                  delay: index * 0.1,
+                  ease: 'easeOut',
                 }}
+                className="p-6 bg-white border border-border rounded-xl hover:shadow-xl transition-all duration-500 cursor-pointer group"
               >
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                  {/* Left side */}
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-3">
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-semibold text-white bg-gradient-to-r ${getCategoryColor(
-                          article.category,
+                          article.category
                         )}`}
                       >
                         {article.category}
@@ -336,6 +359,7 @@ const News: React.FC = () => {
                         {formatDate(article.date)}
                       </div>
                     </div>
+
                     <h3 className="text-lg font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
                       {article.title}
                     </h3>
@@ -343,19 +367,20 @@ const News: React.FC = () => {
                       {article.excerpt}
                     </p>
                   </div>
+
+                  {/* Right side */}
                   <div className="flex-shrink-0 flex items-center gap-2 text-primary font-semibold group-hover:gap-3 transition-all">
                     Read More
                     <ArrowRight size={18} />
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </div>
-
+        </motion.div>
         {/* Newsletter Signup */}
         <div data-aos="zoom-in"
-             className="mt-16 bg-gradient-to-r from-primary to-blue-600 text-white rounded-xl p-8 md:p-12 text-center">
+          className="mt-16 bg-gradient-to-r from-primary to-blue-600 text-white rounded-xl p-8 md:p-12 text-center">
           <h3 className="text-3xl font-bold mb-3">Stay Updated</h3>
           <p className="text-lg opacity-90 mb-6 max-w-xl mx-auto">
             Subscribe to our newsletter to receive the latest news and

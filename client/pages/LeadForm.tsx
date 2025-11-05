@@ -336,7 +336,7 @@ const LeadForm: React.FC = () => {
 
           {/* Additional Information */}
           <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
+            <div data-aos="flip-up" className="text-center">
               <div className="text-4xl mb-4">📞</div>
               <h4 className="font-semibold text-foreground mb-2">
                 Quick Response
@@ -345,7 +345,7 @@ const LeadForm: React.FC = () => {
                 We respond to inquiries within 2-3 business days
               </p>
             </div>
-            <div className="text-center">
+            <div data-aos="flip-up" className="text-center">
               <div className="text-4xl mb-4">🤝</div>
               <h4 className="font-semibold text-foreground mb-2">
                 Expert Team
@@ -354,7 +354,7 @@ const LeadForm: React.FC = () => {
                 Connected directly with relevant business decision makers
               </p>
             </div>
-            <div className="text-center">
+            <div data-aos="flip-up" className="text-center">
               <div className="text-4xl mb-4">🔒</div>
               <h4 className="font-semibold text-foreground mb-2">
                 Confidential
