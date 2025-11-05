@@ -287,7 +287,7 @@ const HeroSection: React.FC = () => {
             >
               <Link
                 to="/contact"
-                className="btn-secondary inline-block text-center border-none text-white hover:bg-white hover:text-primary hover:scale-105 transform transition-all duration-300"
+                className="btn-secondary inline-block text-center border-none text-black hover:bg-white hover:text-primary hover:scale-105 transform transition-all duration-300"
               >
                 Contact Us
               </Link>

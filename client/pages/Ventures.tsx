@@ -386,10 +386,12 @@ const VenturesContent: React.FC<{ view?: VenturesView }> = ({ view }) => {
 };
 
 const Ventures: React.FC = () => {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+ 
   const { type } = useParams<{ type: "completed" | "ongoing" }>();
+
+   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [type]);
 
   if (type === "completed" || type === "ongoing") {
     return <VenturesContent view={type} />;

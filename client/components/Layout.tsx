@@ -56,6 +56,9 @@ const Header: React.FC = () => {
 
   const isActive = (href: string) => location.pathname === href;
 
+
+  
+
   return (
     <header className="sticky top-0 z-50 bg-white shadow-sm dark:bg-slate-900 transition-colors">
       <nav className="section-container py-4 flex items-center justify-between">

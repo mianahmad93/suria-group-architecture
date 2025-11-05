@@ -267,7 +267,7 @@ const SuiraTechnologies: React.FC = () => {
                       variants={textRevealAnimation}
                       initial="initial"
                       animate={textInView ? "enter" : "initial"}
-                      className="text-4xl md:text-5xl font-bold mb-4 text-gray-900"
+                      className="text-4xl md:text-5xl font-bold mb-4 text-amber-600"
                     >
                       {line}
                     </motion.h2>
@@ -373,7 +373,7 @@ const SuiraTechnologies: React.FC = () => {
               alt="Suira Technologies Office"
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-blue-600 opacity-20"></div>
+            <div className="absolute inset-0  opacity-20"></div>
           </motion.div>
         </div>
       </section>
